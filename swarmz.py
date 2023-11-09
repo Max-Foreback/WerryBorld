@@ -80,6 +80,7 @@ class Agent():
         #temp
         x_offset = -1 if x_out < -0.3 else (0 if -0.3 <= x_out <= 0.3 else 1)
         y_offset = -1 if y_out < -0.3 else (0 if -0.3 <= y_out <= 0.3 else 1)
+        #Greedy
         # key_with_highest_value = max(self.perception, key=lambda k: self.perception[k])
         # return key_with_highest_value
         return (self.position[0] + x_offset, self.position[1] + y_offset)

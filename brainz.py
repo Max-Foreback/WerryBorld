@@ -5,10 +5,14 @@ import random
 class simpleNN(nn.Module):
     def __init__(self):
         super(simpleNN, self).__init__()
-        self.fc = nn.Linear(8, 2)
+        self.fc = nn.Linear(8, 8)
+        self.fc2 = nn.Linear(8, 2)
     
     def forward(self, x):
-        return self.fc(x)
+        x = self.fc(x)
+        x = torch.relu(x)
+        x = self.fc2(x)
+        return x
     
     def get_outputs(self, data):
         self.eval()  
