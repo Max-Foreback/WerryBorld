@@ -2,25 +2,29 @@ import torch
 import torch.nn as nn
 import random
 
-#torch.manual_seed(4)
-
 class simpleNN(nn.Module):
-    def __init__(self, ins):
+    def __init__(self):
         super(simpleNN, self).__init__()
-        self.fc = nn.Linear(ins, 1)
+        self.fc = nn.Linear(8, 2)
     
     def forward(self, x):
         return self.fc(x)
     
-    def eval(self, input):
-        adjusted = torch.tensor(input, dtype=torch.float32)
-        out = self(adjusted)
-        return self.map_output(out)
+    def get_outputs(self, data):
+        self.eval()  
+        with torch.no_grad():
+            outputs = self(data)
+        return outputs
     
-    def map_output(self, out):
-        #check monday
-        mapped = int(out) % 8
-        return mapped
+    # def evaluate(self, input):
+    #     adjusted = torch.tensor(input, dtype=torch.float32)
+    #     out = self(adjusted)
+    #     return self.map_output(out)
+    
+    # def map_output(self, out):
+    #     #check monday
+    #     mapped = int(out) % 8
+    #     return mapped
     
     def mutate(self, mutation_rate = .1, mutation_magnitude = 1):
         for param in self.parameters():

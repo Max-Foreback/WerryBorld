@@ -39,15 +39,15 @@ class World:
     def get_agent_perception(self, agent_pos):
         agent_x = agent_pos[0]
         agent_y = agent_pos[1]
-        perception = []
+        perception = {}
         for i in range(agent_x - 1, agent_x + 2):
             for j in range(agent_y - 1, agent_y + 2):
                 #Dont need to percieve agents own pos
                 if (i == agent_x and j == agent_y):
-                    pass
+                    continue
                 #Detect agents surroundings, reading style (left to right)
                 elif 0 <= i < len(self.grid) and 0 <= j < len(self.grid[0]):
-                    perception.append(self.grid[i][j])
+                    perception[i, j] = self.get_cell(i, j)
                 else:
-                    perception.append(-1)
+                    perception[i, j] = -1
         return perception

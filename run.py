@@ -1,10 +1,13 @@
-import csv, copy
+import csv, copy, random
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from selectorz import tourny
 from configz import CONFIG
 from swarmz import Swarm
 from worldz import World
+
+#random.seed(4)
 
 def Setup(pop_size=CONFIG["num_swarms"], num_agents=CONFIG["swarm_size"]):
     pop = []
@@ -23,18 +26,24 @@ def eval_swarm(swarm, world=None, num_timesteps=CONFIG["num_eval_timesteps"], tr
     if world is None:
         world = World()
     swarm_score = 0
-    snapshots = []
     swarm.spawn_swarm(world)
+    if track:
+        snapshots = []
+        scores = [0]
+        snapshots.append(world.get_grid_cpy())
     for _ in range(num_timesteps):
+        swarm_score += swarm.make_moves(world)
         if track:
             snapshots.append(world.get_grid_cpy())
-        swarm_score += swarm.make_moves(world)
-    return snapshots if track else swarm_score
+            scores.append(swarm_score)
+    if track: 
+        return snapshots, scores
+    return swarm_score  
 
 def Evolve(eval_pop):
     #Selection
     new_pop = tourny(eval_pop)
-    #Hacky homogeneous mutation
+    #Hacky homogeneous mutation (maybe not even needed if refs are shared?)
     for swarm in new_pop:
         temp = swarm.agents[0].brain
         temp.mutate()
@@ -47,7 +56,7 @@ def runner(n=CONFIG["num_generations"]):
     tracker = []
 
     for i in range(n):
-        print(i)
+        print("Generation " + str(i))
         evaluated_pop = eval_pop(pop)
         tracker.append([i, max(evaluated_pop.values())])
         evolved_pop = Evolve(evaluated_pop)
@@ -66,16 +75,23 @@ def plot():
     plt.show()
 
 def observe(swarm, n=CONFIG["num_observe"]):
-    snapshots = eval_swarm(swarm, num_timesteps=n, track=True)
-    for i, grid in enumerate(snapshots):
-        plt.imshow(grid)
+    snapshots, scores = eval_swarm(swarm, num_timesteps=n, track=True)
+    #rotate for proper printing
+    rotated = []
+    for snapshot in snapshots:
+        rows = list(map(list, zip(*snapshot)))
+        rotated.append(rows)
+    for i in range(len(rotated)):
+        plt.imshow(rotated[i], origin='lower')
         plt.colorbar()
-        plt.title("Update " + str(i))
+        plt.title("Update " + str(i) + " Score: " + str(scores[i]))
         plt.draw()
         plt.pause(1)
+        #plt.waitforbuttonpress()
         plt.clf() 
 
 if __name__ == "__main__":
+
 
     final_pop, data = runner()
     with open("out.csv", 'w') as f:
