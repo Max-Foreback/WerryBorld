@@ -1,6 +1,7 @@
 import torch 
 import torch.nn as nn
 import random
+from configz import CONFIG
 
 class simpleNN(nn.Module):
     def __init__(self):
@@ -30,7 +31,7 @@ class simpleNN(nn.Module):
     #     mapped = int(out) % 8
     #     return mapped
     
-    def mutate(self, mutation_rate = .1, mutation_magnitude = 1):
+    def mutate(self, mutation_rate=CONFIG["mutation_rate"], mutation_magnitude=CONFIG["mutation_magnitude"]):
         for param in self.parameters():
             if(random.random() <= mutation_rate):
-                param.data += mutation_magnitude * torch.rand_like(param)
+                param.data += mutation_magnitude * (2 * torch.rand_like(param) - 1)

@@ -34,9 +34,10 @@ class Swarm():
             #if move is valid
             if world.is_pos_valid(new_x, new_y) and not world.is_occupied(new_x, new_y):
                 #Replace old location with new val, update agent pos, update score, update new location, update agent perception
-                world.set_random(agent.get_x(), agent.get_y())
+                world.set_cell(agent.get_x(), agent.get_y(), 0)
+                #world.set_random(agent.get_x(), agent.get_y())
                 agent.position = desired_move
-                scored += world.get_cell(new_x, new_y)
+                scored += 1 if world.get_cell_score(new_x, new_y) else 0
                 world.set_occupied(new_x, new_y)
                 agent.set_perception(world.get_agent_perception(agent.position))
         return scored

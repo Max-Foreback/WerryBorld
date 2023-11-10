@@ -40,15 +40,20 @@ def eval_swarm(swarm, world=None, num_timesteps=CONFIG["num_eval_timesteps"], tr
         return snapshots, scores
     return swarm_score  
 
-def Evolve(eval_pop):
+def Evolve(eval_pop, h=CONFIG["homogeneous"]):
     #Selection
     new_pop = tourny(eval_pop)
     #Hacky homogeneous mutation (maybe not even needed if refs are shared?)
-    for swarm in new_pop:
-        temp = swarm.agents[0].brain
-        temp.mutate()
-        for agent in swarm.agents:
-            agent.brain = temp
+    if h:
+        for swarm in new_pop:
+            temp = swarm.agents[0].brain
+            temp.mutate()
+            for agent in swarm.agents:
+                agent.brain = temp
+    else:
+        for swarm in new_pop:
+            for agent in swarm.agents:
+                agent.brain.mutate()
     return new_pop
 
 def runner(n=CONFIG["num_generations"]):
@@ -91,7 +96,6 @@ def observe(swarm, n=CONFIG["num_observe"]):
         plt.clf() 
 
 if __name__ == "__main__":
-
 
     final_pop, data = runner()
     with open("out.csv", 'w') as f:
