@@ -8,9 +8,11 @@ class World:
         self.xSize = x
         self.ySize = y
         self.total_score = 0
-        for i in range(x):
-            for j in range(y):
-                self.set_random(i, j)
+        for _ in range(25):
+            x, y = random.randint(0, self.xSize - 1), random.randint(0, self.ySize - 1)
+            while self.get_cell(x, y) == 1:  
+                x, y = random.randint(0, self.xSize - 1), random.randint(0, self.ySize - 1)
+            self.set_cell(x, y, 1)
 
     def get_cell(self, x, y):
         return copy.deepcopy(self.grid[x][y])

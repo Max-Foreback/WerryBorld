@@ -24,11 +24,14 @@ class Swarm():
             world.set_occupied(agent_x, agent_y)
             agent.set_position(agent_x, agent_y)
 
-    def make_moves(self, world):
+    def make_moves(self, world, greedy=False):
         scored = 0
         for agent in self.agents:
             agent.set_perception(world.get_agent_perception(agent.position))
-            desired_move = agent.calc_move()
+            if greedy:
+                desired_move = agent.greedy_move()
+            else:
+                desired_move = agent.calc_move()
             new_x = desired_move[0]
             new_y = desired_move[1]
             #if move is valid
@@ -85,6 +88,9 @@ class Agent():
         # key_with_highest_value = max(self.perception, key=lambda k: self.perception[k])
         # return key_with_highest_value
         return (self.position[0] + x_offset, self.position[1] + y_offset)
+    
+    def greedy_move(self):
+        return max(self.perception, key=lambda k: self.perception[k])
     
 def simplify(perception):
     return max(perception, key=lambda k: perception[k])
