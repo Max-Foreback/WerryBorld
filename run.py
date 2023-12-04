@@ -88,7 +88,7 @@ def greedy():
 
 
 def plot():
-    df = pd.read_csv('out.csv')
+    df = pd.read_csv('results/out.csv')
     x = df.iloc[:, 0]
     y = df.iloc[:, 1]
     y2 = df.iloc[:, 2]
@@ -97,7 +97,7 @@ def plot():
     plt.xlabel('Generations')
     plt.ylabel('Best Swarm Fitness')
     plt.title('Fitness over time')
-    plt.show()
+    plt.savefig('results/fitness.png')
 
 def observe(swarm, n=CONFIG["num_observe"]):
     snapshots, scores = eval_swarm(swarm, num_timesteps=n, track=True)
@@ -110,9 +110,10 @@ def observe(swarm, n=CONFIG["num_observe"]):
         plt.imshow(rotated[i], origin='lower')
         plt.colorbar()
         plt.title("Update " + str(i) + " Score: " + str(scores[i]))
-        plt.draw()
-        plt.pause(1)
-        #plt.waitforbuttonpress()
+        plt.savefig(f"results/plot_{i}.png")
+        # plt.draw()
+        # plt.pause(1)
+        # plt.waitforbuttonpress()
         plt.clf() 
 
 if __name__ == "__main__":
@@ -122,7 +123,7 @@ if __name__ == "__main__":
     for i in range(len(data)):
         data[i].append(greedy_data[i])
 
-    with open("out.csv", 'w') as f:
+    with open("results/out.csv", 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerows(data)
     eval_final_pop = eval_pop(final_pop)
