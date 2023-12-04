@@ -64,7 +64,9 @@ def runner(n=CONFIG["num_generations"]):
     for i in range(n):
         print("Generation " + str(i))
         evaluated_pop = eval_pop(pop)
-        tracker.append([i, max(evaluated_pop.values())])
+        avg_fitness = sum(evaluated_pop.values())/len(evaluated_pop)
+        max_fitness = max(evaluated_pop.values())
+        tracker.append([i, max_fitness, avg_fitness])
         evolved_pop = Evolve(evaluated_pop)
         pop = evolved_pop
 
@@ -89,14 +91,18 @@ def greedy():
 
 def plot():
     df = pd.read_csv('results/out.csv')
-    x = df.iloc[:, 0]
-    y = df.iloc[:, 1]
-    y2 = df.iloc[:, 2]
-    plt.plot(x, y, y2)
+    gen = df.iloc[:, 0]
+    max_fitness = df.iloc[:, 1]
+    avg_fitness = df.iloc[:, 2]
+    greedy_fitness = df.iloc[:, 3]
+    plt.plot(gen, max_fitness, label='Max Fitness')
+    plt.plot(gen, avg_fitness, label='Avg Fitness')
+    plt.plot(gen, greedy_fitness, label='Greedy Fitness')
     plt.axhline(y=25, color='green')
     plt.xlabel('Generations')
     plt.ylabel('Best Swarm Fitness')
     plt.title('Fitness over time')
+    plt.legend()
     plt.savefig('results/fitness.png')
 
 def observe(swarm, n=CONFIG["num_observe"]):

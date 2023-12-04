@@ -6,8 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
-# Ignore .csv files
+# Ignore .csv and .out files
 *.csv
+*.out
 
 #Ignore images
 *.jpg

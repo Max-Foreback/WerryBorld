@@ -26,7 +26,7 @@ mkdir $1
 cd $1
 
 # Get files
-cp /mnt/home/$USER/WerryBorld/*.py
+cp /mnt/home/$USER/WerryBorld/*.py .
 
 # Make a new results directory for this run
 mkdir results
