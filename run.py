@@ -19,15 +19,23 @@ def Setup(pop_size=CONFIG["num_swarms"], num_agents=CONFIG["swarm_size"]):
 def eval_pop(pop):
     evaluated = {}
     for swarm in pop:
-        score = eval_swarm(swarm)
-        evaluated[swarm] = score
+        score = 0
+        evals = 5
+        for _ in range(evals):
+            w = World()
+            p = w.get_empty_positions(CONFIG["swarm_size"])
+            score += eval_swarm(swarm, world=copy.deepcopy(w), initial_positions=copy.deepcopy(p))
+        avg_score = score/evals
+        evaluated[swarm] = avg_score
     return evaluated
 
-def eval_swarm(swarm, world=None, num_timesteps=CONFIG["num_eval_timesteps"], track=False):
+def eval_swarm(swarm, world=None, num_timesteps=CONFIG["num_eval_timesteps"], track=False, initial_positions=None):
     if world is None:
         world = World()
+    if initial_positions is None:
+        initial_positions = world.get_empty_positions(CONFIG["swarm_size"])
     swarm_score = 0
-    swarm.spawn_swarm(world)
+    swarm.spawn_swarm(world, positions=initial_positions)
     # If we're tracking save data for the vizualization 
     if track:
         snapshots = []
@@ -98,6 +106,7 @@ def plot():
     greedy_fitness = df.iloc[:, 3]
     # clear plot
     plt.clf()
+    plt.figure(figsize=(40, 10), dpi=150)
     plt.plot(gen, max_fitness, label='Max Fitness')
     plt.plot(gen, avg_fitness, label='Avg Fitness')
     plt.plot(gen, greedy_fitness, label='Greedy Fitness')

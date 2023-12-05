@@ -6,8 +6,8 @@ from configz import CONFIG
 class simpleNN(nn.Module):
     def __init__(self):
         super(simpleNN, self).__init__()
-        self.fc = nn.Linear(8, 8)
-        self.fc2 = nn.Linear(8, 2)
+        self.fc = nn.Linear(12, 8)
+        self.fc2 = nn.Linear(8, 6)
     
     def forward(self, x):
         x = self.fc(x)

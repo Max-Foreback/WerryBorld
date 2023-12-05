@@ -46,6 +46,15 @@ class World:
             return True
         return False 
     
+    def get_empty_positions(self, num_positions):
+        positions = []
+        while len(positions) < num_positions:
+            x, y = random.randint(0, self.xSize - 1), random.randint(0, self.ySize - 1)
+            if (x, y) not in positions and self.get_cell(x, y) == 0:
+                positions.append((x, y))
+        return positions
+
+    
     def get_agent_perception(self, agent_pos):
         agent_x = agent_pos[0]
         agent_y = agent_pos[1]

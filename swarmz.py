@@ -16,13 +16,14 @@ class Swarm():
             agent = Agent(brain) if homogeneous else Agent()
             self.agents.append(agent)
 
-    def spawn_swarm(self, world):
-        for agent in self.agents:
-            agent_x, agent_y = random.randint(0, world.xSize - 1), random.randint(0, world.ySize - 1)
-            while world.is_occupied(agent_x, agent_y):
-                agent_x, agent_y = random.randint(0, world.xSize - 1), random.randint(0, world.ySize - 1)
-            world.set_occupied(agent_x, agent_y)
-            agent.set_position(agent_x, agent_y)
+    def spawn_swarm(self, world, positions=None):
+        #If we're not given positions, generate some randomly and return them
+        if positions is None:
+            positions = world.get_empty_positions(len(self.agents))
+        for agent, position in zip(self.agents, positions):
+            world.set_occupied(position[0], position[1])
+            agent.set_position(position[0], position[1])
+        return positions
 
     def make_moves(self, world, greedy=False):
         scored = 0
@@ -53,6 +54,7 @@ class Agent():
         self.position = (None, None)
         self.perception = {}
         self.brain = brain
+        self.memory = [0, 0, 0, 0]
 
     def set_position(self, x, y):
         self.position = (x, y)
@@ -78,9 +80,14 @@ class Agent():
         #     output += 1
         # x_offset = (output % 3) - 1
         # y_offset = (output // 3) - 1
-        out = self.brain.get_outputs(torch.tensor(list(self.perception.values()), dtype=torch.float32))
+        input = list(self.perception.values()) + copy.deepcopy(self.memory)
+        out = self.brain.get_outputs(torch.tensor(input, dtype=torch.float32))
         x_out = out[0].item()
         y_out = out[1].item()
+        self.memory[0] = out[2].item()
+        self.memory[1] = out[3].item()
+        self.memory[2] = out[4].item()
+        self.memory[3] = out[5].item()
         #temp
         x_offset = -1 if x_out < -0.3 else (0 if -0.3 <= x_out <= 0.3 else 1)
         y_offset = -1 if y_out < -0.3 else (0 if -0.3 <= y_out <= 0.3 else 1)

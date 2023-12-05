@@ -2,7 +2,7 @@ CONFIG = {
     "world_x": 10, 
     "world_y": 10, 
     "swarm_size": 3, 
-    "num_swarms": 1000, 
+    "num_swarms": 100, 
     "num_generations": 1000,
     "num_eval_timesteps": 20, 
     "homogeneous": True, 
