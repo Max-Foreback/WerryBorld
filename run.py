@@ -1,5 +1,6 @@
 import csv, copy, random
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import pandas as pd
 import numpy as np
 from selectorz import tourny
@@ -95,6 +96,8 @@ def plot():
     max_fitness = df.iloc[:, 1]
     avg_fitness = df.iloc[:, 2]
     greedy_fitness = df.iloc[:, 3]
+    # clear plot
+    plt.clf()
     plt.plot(gen, max_fitness, label='Max Fitness')
     plt.plot(gen, avg_fitness, label='Avg Fitness')
     plt.plot(gen, greedy_fitness, label='Greedy Fitness')
@@ -112,15 +115,27 @@ def observe(swarm, n=CONFIG["num_observe"]):
     for snapshot in snapshots:
         rows = list(map(list, zip(*snapshot)))
         rotated.append(rows)
-    for i in range(len(rotated)):
-        plt.imshow(rotated[i], origin='lower')
-        plt.colorbar()
-        plt.title("Update " + str(i) + " Score: " + str(scores[i]))
-        plt.savefig(f"results/plot_{i}.png")
-        # plt.draw()
-        # plt.pause(1)
-        # plt.waitforbuttonpress()
+
+    def update(frame):
         plt.clf() 
+        plt.imshow(rotated[frame], origin='lower')
+        plt.colorbar()
+        plt.title("Update " + str(frame) + " Score: " + str(scores[frame]))
+
+    try:
+        fig, ax = plt.subplots()
+        ani = FuncAnimation(fig, update, frames=len(rotated), interval=200)
+        #make sure you have ffmpeg installed 
+        ani.save('results/output.mp4', writer='ffmpeg', fps=1)
+    except Exception as e:
+        #if you cant get ffmpeg to work, this is a valid alternative 
+        for i in range(len(rotated)):
+            plt.imshow(rotated[i], origin='lower')
+            plt.colorbar()
+            plt.title("Update " + str(i) + " Score: " + str(scores[i]))
+            plt.savefig(f"results/plot_{i}.png")
+            plt.clf()  
+        print("Unable to generate mp4 file. Error: ", str(e))
 
 if __name__ == "__main__":
 
