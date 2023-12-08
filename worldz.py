@@ -53,8 +53,13 @@ class World:
             if (x, y) not in positions and self.get_cell(x, y) == 0:
                 positions.append((x, y))
         return positions
-
     
+    def get_empty_position(self):
+        x, y = random.randint(0, self.xSize - 1), random.randint(0, self.ySize - 1)
+        while self.get_cell(x, y) != 0:
+            x, y = random.randint(0, self.xSize - 1), random.randint(0, self.ySize - 1)
+        return(x, y)
+
     def get_agent_perception(self, agent_pos):
         agent_x = agent_pos[0]
         agent_y = agent_pos[1]
@@ -65,12 +70,12 @@ class World:
                 if (i == agent_x and j == agent_y):
                     continue
                 #Detect agents surroundings, reading style (left to right)
-                if not self.is_pos_valid(i, j):
+                if not self.is_pos_valid(i, j) or self.is_occupied(i, j):
                     perception[i, j] = -1
                 # else:
                 #     perception[i, j] = self.get_cell(i, j)
-                elif self.is_occupied(i, j) or self.get_cell(i, j) == 0:
-                    perception[i, j] = -1
+                elif self.get_cell(i, j) == 0:
+                    perception[i, j] = 0
                 elif self.get_cell(i, j) == 1:
                     perception[i, j] = 1
                 else:

@@ -71,7 +71,8 @@ def runner(n=CONFIG["num_generations"]):
     tracker = []
 
     for i in range(n):
-        print("Generation " + str(i))
+        #Need to flush buffer for HPCC printing
+        print("Generation " + str(i), flush=True)
         evaluated_pop = eval_pop(pop)
         avg_fitness = sum(evaluated_pop.values())/len(evaluated_pop)
         max_fitness = max(evaluated_pop.values())

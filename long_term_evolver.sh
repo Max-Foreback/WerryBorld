@@ -6,13 +6,13 @@
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=foreba10@msu.edu
 
-## Firts arg is name of experiment
+## First arg is name of experiment
 
 ## Job name settings
 #SBATCH --job-name=WerryBorld
 
 ## Time requirement in format "days-hours:minutes"
-#SBATCH --time=6-0:00
+#SBATCH --time=2-0:00
 
 ## Memory requirement in megabytes
 #SBATCH --mem-per-cpu=5120                                                 

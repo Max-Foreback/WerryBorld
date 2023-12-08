@@ -11,7 +11,8 @@ class simpleNN(nn.Module):
     
     def forward(self, x):
         x = self.fc(x)
-        x = torch.relu(x)
+        #x = torch.relu(x)
+        x = torch.tanh(x)
         x = self.fc2(x)
         return x
     

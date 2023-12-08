@@ -25,7 +25,7 @@ class Swarm():
             agent.set_position(position[0], position[1])
         return positions
 
-    def make_moves(self, world, greedy=False):
+    def make_moves(self, world, greedy=False, replace=CONFIG["replace"]):
         scored = 0
         for agent in self.agents:
             agent.set_perception(world.get_agent_perception(agent.position))
@@ -37,11 +37,15 @@ class Swarm():
             new_y = desired_move[1]
             #if move is valid
             if world.is_pos_valid(new_x, new_y) and not world.is_occupied(new_x, new_y):
-                #Replace old location with new val, update agent pos, update score, update new location, update agent perception
+                #Set old location as empty, update agent pos, update score, update new location, update agent perception
                 world.set_cell(agent.get_x(), agent.get_y(), 0)
-                #world.set_random(agent.get_x(), agent.get_y())
+                
                 agent.position = desired_move
-                scored += 1 if world.get_cell_score(new_x, new_y) else 0
+                if world.get_cell_score(new_x, new_y) == 1:
+                    scored += 1
+                    if replace:
+                        new_position = world.get_empty_position()
+                        world.set_cell(new_position[0], new_position[1], 1)
                 world.set_occupied(new_x, new_y)
                 agent.set_perception(world.get_agent_perception(agent.position))
         return scored
