@@ -11,9 +11,6 @@ __pycache__/
 *.out
 *.mp4
 
-#Ignore config changes
-configz.py
-
 #Ignore images
 *.jpg
 *.jpeg
