@@ -70,10 +70,11 @@ class World:
                 if (i == agent_x and j == agent_y):
                     continue
                 #Detect agents surroundings, reading style (left to right)
-                if not self.is_pos_valid(i, j) or self.is_occupied(i, j):
+                #Lets be really clear about what agents see
+                if not self.is_pos_valid(i, j):
+                    perception[i, j] = -2
+                elif self.is_occupied(i, j):
                     perception[i, j] = -1
-                # else:
-                #     perception[i, j] = self.get_cell(i, j)
                 elif self.get_cell(i, j) == 0:
                     perception[i, j] = 0
                 elif self.get_cell(i, j) == 1:
