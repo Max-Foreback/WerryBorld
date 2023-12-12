@@ -104,17 +104,17 @@ def plot():
     gen = df.iloc[:, 0]
     max_fitness = df.iloc[:, 1]
     avg_fitness = df.iloc[:, 2]
-    greedy_fitness = df.iloc[:, 3]
+    #greedy_fitness = df.iloc[:, 3]
     # clear plot
     plt.clf()
     plt.figure(figsize=(40, 10), dpi=150)
     plt.plot(gen, max_fitness, label='Max Fitness')
     plt.plot(gen, avg_fitness, label='Avg Fitness')
-    plt.plot(gen, greedy_fitness, label='Greedy Fitness')
-    plt.axhline(y=25, color='green')
+    #plt.plot(gen, greedy_fitness, label='Greedy Fitness')
+    #plt.axhline(y=25, color='green')
     plt.xlabel('Generations')
     plt.ylabel('Best Swarm Fitness')
-    plt.title('Fitness over time')
+    plt.title(f'Fitness over time. Avg:{df.iloc[:, 2].iloc[-1]} Max:{df.iloc[:, 1].iloc[-1]}')
     plt.legend()
     plt.savefig('results/fitness.png')
 
@@ -150,9 +150,9 @@ def observe(swarm, n=CONFIG["num_observe"]):
 if __name__ == "__main__":
 
     final_pop, data = runner()
-    greedy_data = greedy()
-    for i in range(len(data)):
-        data[i].append(greedy_data[i])
+    #greedy_data = greedy()
+    # for i in range(len(data)):
+    #     data[i].append(greedy_data[i])
 
     with open("results/out.csv", 'w') as f:
         csv_writer = csv.writer(f)
